@@ -1,0 +1,107 @@
+---
+title: "Effect of Pre-Meeting Small Talk on Perceived Social Cohesion"
+author: "Antonio Amaddio"
+date: "2023-06-04"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+    theme: united
+    # theme: bootstrap
+    # theme: cosmo
+    highlight: tango
+    code_folding: hide
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+# load user level data
+library(readr)
+data <- read_delim("data_project_982541_2023_06_13.csv", delim = ";", escape_double = FALSE, trim_ws = TRUE)
+colnames(data)[which(names(data) == "v_1")] <- "data_policy"
+colnames(data)[which(names(data) == "v_12")] <- "c_1"
+colnames(data)[which(names(data) == "v_13")] <- "c_2"
+colnames(data)[which(names(data) == "v_14")] <- "c_3"
+colnames(data)[which(names(data) == "v_15")] <- "c_4"
+colnames(data)[which(names(data) == "v_16")] <- "c_5"
+colnames(data)[which(names(data) == "v_17")] <- "c_6"
+colnames(data)[which(names(data) == "v_9")] <- "manip_ch"
+colnames(data)[which(names(data) == "v_20")] <- "gender"
+colnames(data)[which(names(data) == "v_10")] <- "age"
+colnames(data)[which(names(data) == "v_11")] <- "exp"
+# keep only variables of interest
+data <- data[c("c_1", "c_2", "c_3", "c_4", "c_5", "c_6", "manip_ch", "gender", "age", "exp")]
+
+# - v_1: Datenschutz
+# - p_0001: external VP
+
+### outcome: (group) cohesion
+
+# v_12: Ich habe das Gefühl, dass ich zu diesem Team dazu gehöre.
+# v_13: Ich bin froh, Teil dieses Teams zu sein.
+# v_14: Ich sehe mich als Teil dieses Teams.
+# v_15: Dieses Team ist eines der Besten überhaupt.
+# v_16: Ich habe das Gefühl, dass ich ein Mitglied dieses Teams bin.
+# v_17: Ich bin damit zufrieden, ein Teil dieses Teams zu sein.
+
+# scale
+# - 1	Starke Ablehnung
+# - 2	 
+# - 3	 
+# - 4	Neutral
+# - 5	 
+# - 6	 
+# - 7	Starke Zustimmung
+
+# mainpulation check:
+
+# v_9: Ich denke, dass die Agenda es ermöglicht, dass sich die Kollegen und Kolleginnen besser kennenlernen können.
+
+### demographic variables:
+
+# v_20: Ich identifiziere mich als...
+
+# - 1	Männlich
+# - 2	Weiblich
+# - 3	Divers
+# - 4	Keine Angabe
+# - 5	Eigene Angabe
+
+# v_21: Gechlecht, eigene Angabe
+
+# v_10: Wie alt sind Sie?
+
+# v_11: Haben Sie Erfahrung mit videobasierten Online-Meetings?
+
+# - 1	Ja
+# - 2	Nein
+```
+
+
+# Variables
+
+Is the data correctly read?
+
+```{r, include=TRUE}
+str(data)
+```
+
+# Descriptive Statistics
+
+Global Descriptive statistics whithout group mean. Condition variable yet unknown.
+
+```{r, include=TRUE}
+library(psych)
+psych::describe(data)
+
+# desribe by condition:
+# describe(mean_oucome ~ condition) #formula mode option calls describeBy for the entire data frame
+
+```
