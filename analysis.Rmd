@@ -1,6 +1,6 @@
 ---
 title: "Effect of Pre-Meeting Small Talk on Perceived Social Cohesion"
-author: "Antonio Amaddio"
+author: "Amaddio, Patrick, Schimmler, Feng"
 date: "2023-06-04"
 output:
   html_document:
@@ -24,7 +24,12 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r, include=FALSE}
 # load user level data
 library(readr)
-data <- read_delim("data_project_982541_2023_06_13.csv", delim = ";", escape_double = FALSE, trim_ws = TRUE)
+data <- read_delim("data_project_982541_2023_06_29.csv", delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+# add treatment variable
+data$exp_condition[data$rnd_pg_6658842 == 6658840] <- 0
+data$exp_condition[data$rnd_pg_6658842 == 6658841] <- 1
+
 colnames(data)[which(names(data) == "v_1")] <- "data_policy"
 colnames(data)[which(names(data) == "v_12")] <- "c_1"
 colnames(data)[which(names(data) == "v_13")] <- "c_2"
@@ -37,7 +42,17 @@ colnames(data)[which(names(data) == "v_20")] <- "gender"
 colnames(data)[which(names(data) == "v_10")] <- "age"
 colnames(data)[which(names(data) == "v_11")] <- "exp"
 # keep only variables of interest
-data <- data[c("c_1", "c_2", "c_3", "c_4", "c_5", "c_6", "manip_ch", "gender", "age", "exp")]
+data <- data[c("c_1", "c_2", "c_3", "c_4", "c_5", "c_6", "manip_ch", "gender", "age", "exp", "exp_condition")]
+data$cohesion_mean <- rowMeans(
+    cbind(
+      data$c_1,
+      data$c_2,
+      data$c_3,
+      data$c_4,
+      data$c_5,
+      data$c_6),
+    na.rm = TRUE
+  )
 
 # - v_1: Datenschutz
 # - p_0001: external VP
@@ -87,21 +102,43 @@ data <- data[c("c_1", "c_2", "c_3", "c_4", "c_5", "c_6", "manip_ch", "gender", "
 
 # Variables
 
-Is the data correctly read?
-
 ```{r, include=TRUE}
 str(data)
 ```
 
 # Descriptive Statistics
 
-Global Descriptive statistics whithout group mean. Condition variable yet unknown.
+Global Descriptive statistics whithout group mean.
 
 ```{r, include=TRUE}
 library(psych)
 psych::describe(data)
-
-# desribe by condition:
-# describe(mean_oucome ~ condition) #formula mode option calls describeBy for the entire data frame
-
 ```
+
+Means depending on the treatment (group: 1) vs control (group: 0)
+
+```{r, include=TRUE}
+psych::describeBy(data, data$exp_condition)
+```
+
+# Analysis of a variance
+
+## Without Control Variables
+
+```{r, include=TRUE}
+one.way <- aov(exp_condition ~ cohesion_mean, data = data)
+summary(one.way)
+```
+
+So far the F(1,158) = 8.92, p = .003 is significant.
+
+## With Age and Gender Controlled
+
+```{r, include=TRUE}
+one.way <- aov(exp_condition ~ cohesion_mean + age + gender, data = data)
+summary(one.way)
+```
+
+Neither gender nor age has a significant impact on team cohesion.
+
+So far the F(1,156) = 8.84, p = .003 is significant.
