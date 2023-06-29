@@ -3,17 +3,17 @@ title: "Effect of Pre-Meeting Small Talk on Perceived Social Cohesion"
 author: "Amaddio, Patrick, Schimmler, Feng"
 date: "2023-06-04"
 output:
+  pdf_document:
+    toc: yes
   html_document:
-    toc: true
-    toc_float: true
-    number_sections: true
+    toc: yes
+    toc_float: yes
+    number_sections: yes
     theme: united
-    # theme: bootstrap
-    # theme: cosmo
     highlight: tango
     code_folding: hide
-editor_options: 
-  markdown: 
+editor_options:
+  markdown:
     wrap: 72
 ---
 
