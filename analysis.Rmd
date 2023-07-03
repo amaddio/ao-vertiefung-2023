@@ -1,6 +1,6 @@
 ---
 title: "Effect of Pre-Meeting Small Talk on Perceived Social Cohesion"
-author: "Amaddio, Patrick, Schimmler, Feng"
+author: "Amaddio, Patrick, Schimmler, Lin"
 date: "2023-06-04"
 output:
   pdf_document:
@@ -25,10 +25,10 @@ knitr::opts_chunk$set(echo = TRUE)
 # load user level data
 library(readr)
 data <- read_delim("data_project_982541_2023_07_03.csv", delim = ";", escape_double = FALSE, trim_ws = TRUE)
-
 # add treatment variable
 data$exp_condition[data$rnd_pg_6658842 == 6658840] <- 0
 data$exp_condition[data$rnd_pg_6658842 == 6658841] <- 1
+data$exp_condition <- as.factor(data$exp_condition)
 
 colnames(data)[which(names(data) == "v_1")] <- "data_policy"
 colnames(data)[which(names(data) == "v_12")] <- "c_1"
@@ -130,7 +130,7 @@ one.way <- aov(cohesion_mean ~ exp_condition, data = data)
 summary(one.way)
 ```
 
-So far the F(1,158) = 8.92, p = .003 is significant.
+So far the F(1,163) = 4.19, p = .04 is significant.
 
 ## With Age and Gender Controlled
 
@@ -141,13 +141,15 @@ summary(one.way)
 
 Neither gender nor age has a significant impact on team cohesion.
 
-So far the F(1,156) = 8.84, p = .003 is significant.
+So far the F(1,161) = 4.18, p = .04 is significant.
 
 ## ANOVA Model Diagnostic
 ### 1. linearity assumption of predictors
 ```{r, include=TRUE}
 plot(one.way, 1)
 ```
+
+Flat line. Looks good.
 
 ### 2. Normalverteilung der Residuen
 ```{r, include=TRUE}
@@ -160,6 +162,8 @@ curve(dt(x, df= df), # theor. Kurve zum Vergleich
 ) # graph. Parameter
 ```
 
+There are observations out of the CI e.g. 57.
+
 ###  3. Outliers & leverage points
 ```{r, include=TRUE}
 plot(one.way, 5)
@@ -167,7 +171,7 @@ car::Boxplot(hatvalues(one.way), id= list(n=1)) # Hebelwerte
 car::outlierTest(one.way)
 ```
 
-Invdividual 1 seams to be an outlier.
+Invdividual 140 seams to be an outlier. Still not over Cooks Distance. Would leave the subject within the sample.
 
 ###  4. Homoscedacity
 ```{r, include=TRUE}
@@ -175,8 +179,13 @@ Invdividual 1 seams to be an outlier.
 plot(one.way, which = 1)
 ```
 
+Variance looks "rather" constant across level of predictor.
+
 ###  5. multicollinearity
 ```{r, include=TRUE}
 # "discovering statistics using R" p. 293
 # If the largest VIF is greater than 10 then there is cause for concern (Bowerman & O'Connell, 1990; Myers, 1990).
 car::vif(one.way)
+```
+
+Predictors are not correlated. All variance inflation factors are close to 1.
