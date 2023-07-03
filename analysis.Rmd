@@ -121,6 +121,8 @@ Means depending on the treatment (group: 1) vs control (group: 0)
 psych::describeBy(data, data$exp_condition)
 ```
 
+Mean difference between group: 5.03 - 4.62 = 0.41
+
 # Analysis of a variance
 
 ## Without Control Variables
