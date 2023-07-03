@@ -24,7 +24,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r, include=FALSE}
 # load user level data
 library(readr)
-data <- read_delim("data_project_982541_2023_06_29.csv", delim = ";", escape_double = FALSE, trim_ws = TRUE)
+data <- read_delim("data_project_982541_2023_07_03.csv", delim = ";", escape_double = FALSE, trim_ws = TRUE)
 
 # add treatment variable
 data$exp_condition[data$rnd_pg_6658842 == 6658840] <- 0
@@ -126,7 +126,7 @@ psych::describeBy(data, data$exp_condition)
 ## Without Control Variables
 
 ```{r, include=TRUE}
-one.way <- aov(exp_condition ~ cohesion_mean, data = data)
+one.way <- aov(cohesion_mean ~ exp_condition, data = data)
 summary(one.way)
 ```
 
@@ -135,10 +135,48 @@ So far the F(1,158) = 8.92, p = .003 is significant.
 ## With Age and Gender Controlled
 
 ```{r, include=TRUE}
-one.way <- aov(exp_condition ~ cohesion_mean + age + gender, data = data)
+one.way <- aov(cohesion_mean ~ exp_condition + age + gender, data = data)
 summary(one.way)
 ```
 
 Neither gender nor age has a significant impact on team cohesion.
 
 So far the F(1,156) = 8.84, p = .003 is significant.
+
+## ANOVA Model Diagnostic
+### 1. linearity assumption of predictors
+```{r, include=TRUE}
+plot(one.way, 1)
+```
+
+### 2. Normalverteilung der Residuen
+```{r, include=TRUE}
+car::qqPlot(one.way)
+studentized.residuals <- rstudent(one.way)
+car::densityPlot(studentized.residuals) # Dichtekurve der Residuen
+df <- one.way$df.residual
+curve(dt(x, df= df), # theor. Kurve zum Vergleich
+      add= TRUE, lwd= 2, lty= 2
+) # graph. Parameter
+```
+
+###  3. Outliers & leverage points
+```{r, include=TRUE}
+plot(one.way, 5)
+car::Boxplot(hatvalues(one.way), id= list(n=1)) # Hebelwerte
+car::outlierTest(one.way)
+```
+
+Invdividual 1 seams to be an outlier.
+
+###  4. Homoscedacity
+```{r, include=TRUE}
+## Residuals vs Fitted Plot to observe homoscedacity
+plot(one.way, which = 1)
+```
+
+###  5. multicollinearity
+```{r, include=TRUE}
+# "discovering statistics using R" p. 293
+# If the largest VIF is greater than 10 then there is cause for concern (Bowerman & O'Connell, 1990; Myers, 1990).
+car::vif(one.way)
