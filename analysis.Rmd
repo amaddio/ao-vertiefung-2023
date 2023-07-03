@@ -123,6 +123,14 @@ psych::describeBy(data, data$exp_condition)
 
 Mean difference between group: 5.03 - 4.62 = 0.41
 
+# Requirement: Manipulation Check
+
+```{r, include=TRUE}
+t.test(manip_ch ~ exp_condition, data=data) # Ho: mu = 39000
+```
+
+Manipulation check is significantly higher in the experimental group, t(160) = -6.67, p < .001
+
 # Analysis of a variance
 
 ## Without Control Variables
