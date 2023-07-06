@@ -24,7 +24,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r, include=FALSE}
 # load user level data
 library(readr)
-data <- read_delim("data_project_982541_2023_07_03.csv", delim = ";", escape_double = FALSE, trim_ws = TRUE)
+data <- read_delim("data_project_982541_2023_07_06.csv", delim = ";", escape_double = FALSE, trim_ws = TRUE)
 # add treatment variable
 data$exp_condition[data$rnd_pg_6658842 == 6658840] <- 0
 data$exp_condition[data$rnd_pg_6658842 == 6658841] <- 1
@@ -129,7 +129,7 @@ Mean difference between group: 5.03 - 4.62 = 0.41
 t.test(manip_ch ~ exp_condition, data=data) # Ho: mu = 39000
 ```
 
-Manipulation check is significantly higher in the experimental group, t(160) = -6.67, p < .001
+Manipulation check is significantly higher in the experimental group, t(163) = -6.48, p < .001
 
 # Analysis of a variance
 
@@ -151,7 +151,7 @@ summary(one.way)
 
 Neither gender nor age has a significant impact on team cohesion.
 
-So far the F(1,161) = 4.18, p = .04 is significant.
+So far the F(1,165) = 4.61, p = .003 is significant.
 
 ## ANOVA Model Diagnostic
 ### 1. linearity assumption of predictors
