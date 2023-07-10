@@ -1,6 +1,6 @@
 ---
 title: "Effect of Pre-Meeting Small Talk on Perceived Social Cohesion"
-author: "Amaddio, Patrick, Schimmler, Lin"
+author: "Amaddio, Patridge-Neumann, Schimmler, Lin"
 date: "2023-06-04"
 output:
   pdf_document:
